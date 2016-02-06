@@ -15,7 +15,11 @@ def eval(var):
     try:
       n = int(lookup(var))
     except:
-      eval(var)
+      try:
+        eval(lookup(var))
+      except:
+        print("can't evaluate %s" % var)
+        exit(0)
   return c_uint16(n).value
 
 def and_or(line):
