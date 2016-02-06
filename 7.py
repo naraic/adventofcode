@@ -1,18 +1,50 @@
 #! /usr/bin/env python
+
 from sys import argv
 from ctypes import c_uint16
 
+wire = {}
+
+def lookup(var):
+  return wire[var]
+
+def eval(var):
+  try:
+    n = int(var)
+  except:
+    try:
+      n = int(lookup(var))
+    except:
+      eval(var)
+  return c_uint16(n).value
+
 def and_or(line):
-  pass
+    left = c_uint16(eval(line[0]))
+    right = c_uint16(eval(line[2]))
+    if line[1] == 'AND':
+      n = left.value & right.value
+    else:
+      n = left.value | right.value
+    assign([n, None, line[-1]])
 
 def shift(line):
-  pass
+  n = c_uint16(eval(line[0]))
+  if line[1] == 'RSHIFT':
+    n.value >>= int(line[2])
+  else:
+    n.value <<= int(line[2])
+  assign([n.value, None, line[-1]]) 
+
 
 def invert(line):
-  pass
+  try:
+    n = ~eval(line[1])
+  except:
+    n = ~eval(line[1]).value
+  assign([c_uint16(n).value, None, line[-1]])
 
 def assign(line):
-  pass
+  wire[line[2]] = int(line[0])
 
 def parse(line):
   line = line.split()
@@ -25,11 +57,10 @@ def parse(line):
   else:
     assign(line)
     
-
 if __name__ == '__main__':
     with open(argv[1]) as wires:
       for line in wires:
+        
         parse(line)
-        
-        
-      
+      for line in wire:
+        print(c_uint16(wire[line]).value)
