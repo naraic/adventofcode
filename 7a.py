@@ -11,12 +11,12 @@ def evaluate(wire):
       return c_uint16(int(wire))
   except:
     pass
+  print(wires[wire], wire)
   value = wires[wire]
-  #print(wires[wire])
   if len(value) is 1:
-    try:
+    if value[0].isdigit():
       return c_uint16(int(value[0]))
-    except:
+    else:
       return evaluate(value[0])
   elif 'NOT' in value:
     if value[-1].isdigit():
@@ -37,6 +37,4 @@ if __name__ == '__main__':
       for line in wire_file:
         line = line.split()
         wires[line[-1]] = line[:-2]
-      for wire in wires:
-        print(evaluate(wire))
       print(evaluate('a'))
