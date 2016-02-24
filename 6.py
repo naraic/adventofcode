@@ -8,6 +8,7 @@ if __name__ == '__main__':
         for command in clist:
             command = command.replace(',', ' ')
             coords = [int(s) for s in command.split() if s.isdigit()]
+            print coords
             for i in range(coords[0], coords[2]+1):
                 for j in range(coords[1], coords[3]+1): 
                     if 'turn on' in command:

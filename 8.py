@@ -2,27 +2,34 @@
 from sys import argv
 import re
 
-def find_escapes(s):
-  regexes = [(re.compile(r'\\x[0-9A-F]{2}', re.IGNORECASE), 3),
-             (re.compile(r'\\\"'), 1),
-             (re.compile(r'\\\\'), 1)]
+def num_escapes(s):
+  regexes = [(r'\\x[0-9A-Fa-f]{2}', 3),
+             (r'\\\\x[0-9A-Fa-f]{2}', -3),
+             (r'\\\"', 1),
+             (r'\\\"$', -1),
+             (r'\\\\', 1)]
   matches = 2
   #muliply the number of chars to remove from the memory of the string with the number of matches per regex
+  print s, 
   for pattern, chars in regexes:
-    matches += len(pattern.findall(s)) * chars
-    print s, matches
+    m = len(re.compile(pattern).findall(s)) 
+    #print pattern, m
+    if m > 0:
+      print pattern, m, 
+    matches += m * chars
   memory_usage = num_chars(s) - matches
+  print memory_usage
   return memory_usage
 
 def num_chars(s):
+  print len(s)
   return len(s)
 
 if __name__ == '__main__':
-    chars = 0
-    memory = 0
+    total = 0
     with open(argv[1]) as strings:
       for string in strings:
         string = string.strip()
-        chars += num_chars(string)
-        memory += find_escapes(string)
-      print chars - memory
+        print string
+        total += (num_chars(string) - num_escapes(string))
+      print total 
