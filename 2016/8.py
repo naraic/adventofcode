@@ -18,11 +18,11 @@ def num_escapes(s):
       print pattern, m, 
     matches += m * chars
   memory_usage = num_chars(s) - matches
+  print 'chars:', num_chars(s), 
   print memory_usage
   return memory_usage
 
 def num_chars(s):
-  print len(s)
   return len(s)
 
 if __name__ == '__main__':
@@ -30,6 +30,5 @@ if __name__ == '__main__':
     with open(argv[1]) as strings:
       for string in strings:
         string = string.strip()
-        print string
         total += (num_chars(string) - num_escapes(string))
       print total 
